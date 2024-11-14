@@ -1,6 +1,3 @@
-.data
-	ask_for_error_margin_msg: .asciz "Введите необходимую точность (количество знаков после запятой): "
-	error: .asciz "Количество знаков после запятой должно быть в диапазоне от 3 до 8 включительно!\n"
 .macro solve_for_x %result %x
 	addi sp sp -72
 	fsd %x (sp)
@@ -144,33 +141,21 @@
 	addi sp sp 92
 .end_macro
 
-.macro get_error_digits_after_comma %result
-	addi sp sp -12
-	sw t0 (sp)
-	sw t1 4(sp)
+.macro input_int %result	
+	li a7 5
+	ecall
 	
-	li t0 3
-	li t1 8
-	
-	loop:
-		la a0 ask_for_error_margin_msg
-		li a7 4
-		ecall
-		li a7 5
-		ecall
-		blt a0 t0 show_error
-		bgt a0 t1 show_error
-		j return
-	show_error:
-		la a0 error
-		li a7 4
-		ecall
-		j loop
-	return:
-		sw a0 8(sp)
-	
-	lw t0 (sp)
-	lw t1 4(sp)
-	lw %result 8(sp)
-	addi sp sp 12
+	mv %result a0
 .end_macro
+
+.macro output_double %value	
+	fmv.d fa0 %value
+	li a7 3
+	ecall
+.end_macro
+
+.macro output_string %string
+	mv a0 %string
+	li a7 4
+	ecall
+.end_macro 
