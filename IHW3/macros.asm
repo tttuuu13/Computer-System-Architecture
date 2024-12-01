@@ -36,6 +36,12 @@
 	mv %descriptor a0
 .end_macro 
 
+.macro close_file %descriptor
+	mv a0 %descriptor
+	li a7 57
+	ecall
+.end_macro
+
 .macro read_from_file %descriptor %buffer %buffer_size %bytes_read
 	# read data from file
 	mv a0 %descriptor
@@ -45,12 +51,7 @@
 	ecall
 	
 	mv %bytes_read a0
-	
-	# close file
-	mv a0 t0
-	li a7 57
-	ecall
-.end_macro 
+.end_macro
 
 .macro count_digits_and_letters %digit_counter %letter_counter %string
 	la t0 %string
@@ -101,8 +102,8 @@
 	mv s6 %buffer_size
 	li t0 0 # read-only flag
 	open_file %input_filename s0 t0 # open file and store file's descriptor in s0
-	#la s1 %digit_counter # digit counter
-	#la s2 %letter_counter # letter counter
+	li s1 0 # digit counter
+	li s2 0 # letter counter
 	
 	read_loop:
 		read_from_file s0 %buffer s6 s3 # read from file and save to buffer, store amount of bytes read in s3
@@ -112,6 +113,7 @@
 		beq s3 s6 read_loop # if amount of bytes read == buffer size, repeat
 
 	done_reading:
+		close_file s0
 		sw s1 28(sp)
 		sw s2 32(sp)
 		lw s0 0(sp)
