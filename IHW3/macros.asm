@@ -53,6 +53,39 @@
 	mv %bytes_read a0
 .end_macro
 
+.macro write_to_file %descriptor %string %length
+	mv a0 %descriptor
+	mv a1 %string
+	mv a2 %length
+	li a7 64
+	ecall
+.end_macro
+
+.macro int_to_string %num %buffer %length
+	mv t0 %num
+	li t2 10
+	la t1 %buffer
+	li t3 0
+	loop:
+		rem t4 t0 t2
+		addi t4 t4 48
+		addi sp sp 4
+		sb t4 0(sp)
+		div t0 t0 t2
+		addi t3 t3 1
+		bnez t0 loop
+	
+	mv %length t3
+	
+	write_loop:
+		lb t5 0(sp)
+		sb t5 0(t1)
+		addi t1 t1 1
+		addi sp sp -4
+		addi t3 t3 -1
+		bnez t3 write_loop
+.end_macro
+
 .macro count_digits_and_letters %digit_counter %letter_counter %string
 	la t0 %string
 	loop:
