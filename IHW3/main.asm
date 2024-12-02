@@ -19,6 +19,7 @@ main:
 	
 	input_string output_filename_prompt, output_filename
 	
+	# convert counter values to string
 	int_to_string s1 digit_counter s3
 	int_to_string s2 letter_counter s4
 	
@@ -26,24 +27,27 @@ main:
 	open_file output_filename s0 t0 # open file and save descriptor to s0
 	
 
-	
+	# write digits counter
 	la t1 digit_counter
 	write_to_file s0 t1 s3
 
+	# write space inbetween
 	la t1 space
 	li t2 1
 	write_to_file s0 t1 t2
 
+	# write letter counter
 	la t1 letter_counter
 	write_to_file s0 t1 s4
 	
 	close_file s0
 	
+	# ask whether data should be printed in the console or not
 	print_string print_to_console_prompt
 	li a7 12
 	ecall
 	li t0 'Y'
-	beq a0 t0 print_to_console
+	beq a0 t0 print_to_console # compare ASCII value of input to ASCII value of char "Y"
 	j exit
 	print_to_console:
 		print_string new_line
