@@ -1,0 +1,3 @@
+/Users/timur/hse/авс/IHW4/cmake-build-debug/CMakeFiles/IHW4.dir
+/Users/timur/hse/авс/IHW4/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/timur/hse/авс/IHW4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
